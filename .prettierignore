@@ -1,6 +1,19 @@
 # Add files here to ignore them from prettier formatting
-/dist
-/coverage
 /.nx/cache
 /.nx/workspace-data
 .nx/self-healing
+
+out/
+dist/
+build/
+public/
+
+node_modules/
+
+coverage/
+
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+.DS_Store

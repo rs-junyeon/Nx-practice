@@ -21,14 +21,14 @@
 
 모노레포가 커지면 보통 아래 문제가 생깁니다. Nx는 각 문제에 대한 해결책을 제공합니다.
 
-| 모노레포에서 생기는 문제 | Nx의 해결 방법 |
-|---|---|
-| 코드 한 줄을 고쳐도 전체를 다시 빌드·테스트해서 CI가 느림 | **affected**: 변경의 영향을 받는 프로젝트만 실행 |
-| 이미 했던 빌드를 또 함 | **계산 캐시**: 입력이 같으면 이전 결과를 그대로 재사용 |
+| 모노레포에서 생기는 문제                                               | Nx의 해결 방법                                                                            |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| 코드 한 줄을 고쳐도 전체를 다시 빌드·테스트해서 CI가 느림              | **affected**: 변경의 영향을 받는 프로젝트만 실행                                          |
+| 이미 했던 빌드를 또 함                                                 | **계산 캐시**: 입력이 같으면 이전 결과를 그대로 재사용                                    |
 | 라이브러리를 먼저 빌드해야 앱을 빌드할 수 있는데, 순서를 사람이 관리함 | **프로젝트 그래프 + 태스크 파이프라인**으로 순서를 자동 결정하고, 가능한 작업은 병렬 실행 |
-| 프로젝트마다 설정과 폴더 구조가 제각각 | **제너레이터**로 같은 규칙의 코드를 생성 |
-| 도구(React, Vite, Jest 등) 버전 업그레이드가 고통스러움 | **`nx migrate`**로 의존성 버전과 설정 코드를 자동 마이그레이션 |
-| 아무 프로젝트나 아무 프로젝트를 import 해서 구조가 무너짐 | **모듈 경계 규칙**(ESLint)으로 의존 방향 제한 |
+| 프로젝트마다 설정과 폴더 구조가 제각각                                 | **제너레이터**로 같은 규칙의 코드를 생성                                                  |
+| 도구(React, Vite, Jest 등) 버전 업그레이드가 고통스러움                | **`nx migrate`**로 의존성 버전과 설정 코드를 자동 마이그레이션                            |
+| 아무 프로젝트나 아무 프로젝트를 import 해서 구조가 무너짐              | **모듈 경계 규칙**(ESLint)으로 의존 방향 제한                                             |
 
 ---
 
@@ -63,13 +63,13 @@ pnpm nx run-many -t build  # 모든 프로젝트의 build 실행
 
 Nx 플러그인은 프로젝트 안의 설정 파일을 읽고 **타깃을 자동으로 만들어 줍니다.** 그래서 `package.json`에 스크립트를 일일이 적지 않아도 됩니다.
 
-| 설정 파일 | 플러그인 | 자동으로 생기는 타깃 |
-|---|---|---|
-| `vite.config.mts` | `@nx/vite/plugin` | `build`, `serve`, `dev`, `preview` |
-| `webpack.config.js` | `@nx/webpack/plugin` | `build`, `serve` |
-| `vitest.config.mts` | `@nx/vitest` | `test` |
-| `eslint.config.mjs` | `@nx/eslint/plugin` | `lint` |
-| `tsconfig.*.json` | `@nx/js/typescript` | `typecheck` |
+| 설정 파일           | 플러그인             | 자동으로 생기는 타깃               |
+| ------------------- | -------------------- | ---------------------------------- |
+| `vite.config.mts`   | `@nx/vite/plugin`    | `build`, `serve`, `dev`, `preview` |
+| `webpack.config.js` | `@nx/webpack/plugin` | `build`, `serve`                   |
+| `vitest.config.mts` | `@nx/vitest`         | `test`                             |
+| `eslint.config.mjs` | `@nx/eslint/plugin`  | `lint`                             |
+| `tsconfig.*.json`   | `@nx/js/typescript`  | `typecheck`                        |
 
 어떤 타깃이 어떻게 만들어졌는지는 아래 명령으로 볼 수 있습니다.
 
@@ -168,23 +168,23 @@ pnpm nx migrate --run-migrations
 
 ### 4.1 비교표
 
-| 항목 | Nx | Turborepo |
-|---|---|---|
-| 만든 곳 | Nx (구 Nrwl) | Vercel |
-| 구현 | TypeScript + Rust 코어 | Rust |
-| 설정 파일 | `nx.json` (+ 필요하면 `project.json`) | `turbo.json` |
-| 태스크 정의 방식 | `package.json` 스크립트도 되고, **플러그인이 설정 파일을 보고 타깃을 자동 추론** | `package.json`의 `scripts`를 `turbo.json`의 `tasks`로 연결 |
-| 의존 관계 파악 | 소스 코드 import 분석 + `package.json` | 주로 `package.json` 의존성 (패키지 단위) |
-| 로컬 캐시 | 있음 | 있음 |
-| 원격 캐시 | Nx Cloud (또는 자체 호스팅 옵션) | Vercel Remote Cache (또는 자체 호스팅 서버) |
-| 영향 범위 실행 | `nx affected` | `turbo run --affected`, `--filter` |
-| 분산 실행 (여러 CI 머신에 태스크 분배) | Nx Cloud의 Nx Agents로 지원 | 기본 제공 없음 |
-| 코드 생성 | 플러그인별 제너레이터가 풍부함 | `turbo gen` (간단한 템플릿 기반) |
-| 자동 마이그레이션 | `nx migrate`가 Nx, 플러그인, 프레임워크 설정까지 업데이트 | Turborepo 자체 업그레이드용 codemod 정도 |
-| 의존 방향 규칙 | `@nx/enforce-module-boundaries` (ESLint, 태그 기반) | `turbo boundaries` (상대적으로 최근 추가된 기능) |
-| 그래프 시각화 | `nx graph` (인터랙티브 웹 UI) | `turbo run --graph` (Graphviz 등 파일 출력) |
-| JS 외 언어 | 플러그인으로 Gradle 등 지원 | JS/TS 패키지 매니저 워크스페이스 중심 |
-| 학습 곡선 | 개념이 많아 처음엔 무거움 | 개념이 적어 바로 도입하기 쉬움 |
+| 항목                                   | Nx                                                                               | Turborepo                                                  |
+| -------------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| 만든 곳                                | Nx (구 Nrwl)                                                                     | Vercel                                                     |
+| 구현                                   | TypeScript + Rust 코어                                                           | Rust                                                       |
+| 설정 파일                              | `nx.json` (+ 필요하면 `project.json`)                                            | `turbo.json`                                               |
+| 태스크 정의 방식                       | `package.json` 스크립트도 되고, **플러그인이 설정 파일을 보고 타깃을 자동 추론** | `package.json`의 `scripts`를 `turbo.json`의 `tasks`로 연결 |
+| 의존 관계 파악                         | 소스 코드 import 분석 + `package.json`                                           | 주로 `package.json` 의존성 (패키지 단위)                   |
+| 로컬 캐시                              | 있음                                                                             | 있음                                                       |
+| 원격 캐시                              | Nx Cloud (또는 자체 호스팅 옵션)                                                 | Vercel Remote Cache (또는 자체 호스팅 서버)                |
+| 영향 범위 실행                         | `nx affected`                                                                    | `turbo run --affected`, `--filter`                         |
+| 분산 실행 (여러 CI 머신에 태스크 분배) | Nx Cloud의 Nx Agents로 지원                                                      | 기본 제공 없음                                             |
+| 코드 생성                              | 플러그인별 제너레이터가 풍부함                                                   | `turbo gen` (간단한 템플릿 기반)                           |
+| 자동 마이그레이션                      | `nx migrate`가 Nx, 플러그인, 프레임워크 설정까지 업데이트                        | Turborepo 자체 업그레이드용 codemod 정도                   |
+| 의존 방향 규칙                         | `@nx/enforce-module-boundaries` (ESLint, 태그 기반)                              | `turbo boundaries` (상대적으로 최근 추가된 기능)           |
+| 그래프 시각화                          | `nx graph` (인터랙티브 웹 UI)                                                    | `turbo run --graph` (Graphviz 등 파일 출력)                |
+| JS 외 언어                             | 플러그인으로 Gradle 등 지원                                                      | JS/TS 패키지 매니저 워크스페이스 중심                      |
+| 학습 곡선                              | 개념이 많아 처음엔 무거움                                                        | 개념이 적어 바로 도입하기 쉬움                             |
 
 > 두 도구 모두 빠르게 발전하고 있어 세부 기능은 바뀔 수 있습니다. 도입 전에는 공식 문서를 확인하세요.
 
@@ -224,11 +224,13 @@ Nx (`nx.json`):
 ### 4.3 언제 무엇을 고를까?
 
 **Turborepo가 잘 맞는 경우**
+
 - 이미 pnpm/npm/yarn 워크스페이스로 잘 굴러가는 저장소에 **캐시와 병렬 실행만 빠르게 추가**하고 싶을 때
 - 패키지 수가 많지 않고 구조가 단순할 때
 - Vercel에 배포하고 Vercel Remote Cache를 쓰고 싶을 때
 
 **Nx가 잘 맞는 경우**
+
 - 프로젝트가 많고 계속 늘어날 예정이라 **일관된 생성 규칙과 아키텍처 규칙**이 필요할 때
 - CI가 느려서 **affected + 원격 캐시 + 분산 실행**까지 필요할 때
 - React, Nest, Angular 등 **프레임워크 업그레이드를 자동화**하고 싶을 때
