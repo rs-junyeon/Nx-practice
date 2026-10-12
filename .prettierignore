@@ -17,3 +17,14 @@ yarn.lock
 package-lock.json
 
 .DS_Store
+
+# AI agent config (managed by Nx)
+/.agents/
+/.claude/
+/.codex/
+/.cursor/
+/.gemini/
+/.opencode/
+/.github/agents/
+/.github/prompts/
+/.github/skills/
