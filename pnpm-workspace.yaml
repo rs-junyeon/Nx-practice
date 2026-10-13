@@ -8,3 +8,9 @@ allowBuilds:
   unrs-resolver: true
   esbuild: false
   '@nestjs/core': false
+# Expo SDK 56(React Native 0.85)은 React 버전이 정확히 일치해야 하므로 워크스페이스 전체를 한 버전으로 고정
+overrides:
+  react: 19.2.3
+  react-dom: 19.2.3
+  react-test-renderer: 19.2.3
+  react-native-svg: 15.15.4
